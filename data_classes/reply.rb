@@ -1,4 +1,6 @@
 require_relative "../QuestionsDatabase.rb"
+require_relative "user.rb"
+require_relative "question.rb"
 
 class Reply
    attr_accessor :id, :subject_question_id, :author_id, :body, :parent_id
@@ -49,5 +51,54 @@ class Reply
       question_replies.map {|qu_reply| Reply.new(qu_reply) } 
    end
 
+   def author
+      author = QuestionsDatabase.instance.execute(<<-SQL, author_id)
+         SELECT
+            *
+         FROM
+            users
+         WHERE
+            id = ?
+      SQL
+      User.new(author.first)
+   end
+
+   def question
+      question = QuestionsDatabase.instance.execute(<<-SQL, subject_question_id)
+         SELECT
+            *
+         FROM
+            questions
+         WHERE
+            id = ?
+      SQL
+      Question.new(question.first)
+   end
+
+   def parent_reply
+      parent_reply = QuestionsDatabase.instance.execute(<<-SQL, parent_id)
+         SELECT
+            *
+         FROM
+            replies
+         WHERE
+            id = ?
+      SQL
+      return nil unless parent_reply.length > 0
+      Reply.new(parent_reply.first)
+   end
+
+   def child_replies
+      child_replies = QuestionsDatabase.instance.execute(<<-SQL, id)
+         SELECT
+            *
+         FROM
+            replies
+         WHERE
+            parent_id = ?
+      SQL
+      return nil unless child_replies.length > 0
+      child_replies.map { |child_reply| Reply.new(child_reply) } 
+   end
    
 end
