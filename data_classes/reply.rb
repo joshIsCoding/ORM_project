@@ -1,7 +1,7 @@
 require_relative "../QuestionsDatabase.rb"
 
 class Reply
-   attr_accessor :id, :fname, :lname
+   attr_accessor :id, :subject_question_id, :author_id, :body, :parent_id
    def initialize(options)
       @id = options["id"]
       @subject_question_id = options["subject_question_id"]
