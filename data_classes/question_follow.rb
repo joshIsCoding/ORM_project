@@ -1,5 +1,3 @@
-require_relative "../QuestionsDatabase.rb"
-
 class QuestionFollow
    attr_accessor :id, :question_id, :author_id
    def initialize(options)

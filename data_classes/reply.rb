@@ -1,7 +1,3 @@
-require_relative "../QuestionsDatabase.rb"
-require_relative "user.rb"
-require_relative "question.rb"
-
 class Reply
    attr_accessor :id, :subject_question_id, :author_id, :body, :parent_id
    def initialize(options)

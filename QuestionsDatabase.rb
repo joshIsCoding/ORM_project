@@ -1,5 +1,10 @@
 require 'sqlite3'
 require 'singleton'
+require_relative "data_classes/user.rb"
+require_relative "data_classes/question.rb"
+require_relative "data_classes/question_follow.rb"
+require_relative "data_classes/question_like.rb"
+require_relative "data_classes/reply.rb"
 
 class QuestionsDatabase < SQLite3::Database
    include Singleton
