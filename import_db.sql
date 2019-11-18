@@ -140,3 +140,9 @@ VALUES
      (SELECT id FROM questions WHERE title = "Lily's Question")
 );
 
+-- lazy seeding
+INSERT INTO question_likes (user_id, question_id) VALUES (1, 1);
+INSERT INTO question_likes (user_id, question_id) VALUES (1, 2);
+INSERT INTO question_likes (user_id, question_id) VALUES (2, 3);
+INSERT INTO question_likes (user_id, question_id) VALUES (3, 2);
+INSERT INTO question_likes (user_id, question_id) VALUES (2, 2);
