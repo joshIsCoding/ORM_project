@@ -59,15 +59,15 @@ CREATE TABLE question_follows
 (
    id INTEGER PRIMARY KEY,
    question_id INTEGER NOT NULL,
-   author_id INTEGER NOT NULL,
+   follower_id INTEGER NOT NULL,
 
    FOREIGN KEY (question_id) REFERENCES questions(id),
-   FOREIGN KEY (author_id) REFERENCES users(id)
+   FOREIGN KEY (follower_id) REFERENCES users(id)
 );
 
 INSERT INTO
    question_follows
-   (question_id, author_id)
+   (question_id, follower_id)
 VALUES
    ( (SELECT id FROM questions WHERE title = "Jim's Question"),
      (SELECT id FROM users WHERE fname = "Jim" AND lname = "Broadbent") 
@@ -75,12 +75,19 @@ VALUES
 
 INSERT INTO
    question_follows
-   (question_id, author_id)
+   (question_id, follower_id)
 VALUES
    ( (SELECT id FROM questions WHERE title = "Lily's Question"),
      (SELECT id FROM users WHERE fname = "Lily" AND lname = "Cortadi") 
 );
 
+INSERT INTO
+   question_follows
+   (question_id, follower_id)
+VALUES
+   ( (SELECT id FROM questions WHERE title = "Lily's Question"),
+      (SELECT id FROM users WHERE fname = "Neil" AND lname = "Christian") 
+);
 
 CREATE TABLE replies
 (

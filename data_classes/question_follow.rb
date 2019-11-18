@@ -1,9 +1,9 @@
 class QuestionFollow
-   attr_accessor :id, :question_id, :author_id
+   attr_accessor :id, :question_id, :follower_id
    def initialize(options)
       @id = options["id"]
       @question_id = options["question_id"]
-      @author_id = options["author_id"]
+      @follower_id = options["follower_id"]
    end
 
    def self.find_by_id(id)
@@ -26,7 +26,7 @@ class QuestionFollow
          FROM
             question_follows
          INNER JOIN
-            users ON users.id = question_follows.author_id
+            users ON users.id = question_follows.follower_id
          WHERE
             question_id = ?
       SQL
@@ -43,7 +43,7 @@ class QuestionFollow
          INNER JOIN
             questions ON questions.id = question_follows.question_id
          WHERE
-            question_follows.author_id = ?
+            question_follows.follower_id = ?
       SQL
 
       followed_questions.map { |qu| Question.new(qu) }
