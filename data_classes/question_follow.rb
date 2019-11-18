@@ -19,4 +19,34 @@ class QuestionFollow
       QuestionFollow.new(question_follow.first) # query returns array of hashes
    end
 
+   def self.followers_for_question_id(question_id)
+      followers = QuestionsDatabase.instance.execute(<<-SQL, question_id)
+         SELECT
+            users.id, fname, lname
+         FROM
+            question_follows
+         INNER JOIN
+            users ON users.id = question_follows.author_id
+         WHERE
+            question_id = ?
+      SQL
+
+      followers.map { |follower| User.new(follower) }
+   end
+
+   def self.followed_questions_for_user_id(user_id)
+      followed_questions = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+         SELECT
+            questions.id, title, body, questions.author_id
+         FROM
+            question_follows
+         INNER JOIN
+            questions ON questions.id = question_follows.question_id
+         WHERE
+            question_follows.author_id = ?
+      SQL
+
+      followed_questions.map { |qu| Question.new(qu) }
+   end
+
 end
