@@ -45,5 +45,8 @@ class Question
       User.new(author.first)
    end
 
+   def replies
+      Reply.find_by_subject_question_id(id)
+   end
    
 end
