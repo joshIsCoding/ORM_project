@@ -33,6 +33,27 @@ class Question
       authors_questions.map{ |author_qu| Question.new(author_qu) }
    end
 
+   def save
+      if id
+         QuestionsDatabase.instance.execute(<<-SQL, id: self.id, title: self.title, author_id: self.author_id, body: self.body)
+            UPDATE
+               questions
+            SET
+               title = :title, author_id = :author_id, body = :body
+            WHERE
+               id = :id
+         SQL
+      else
+         QuestionsDatabase.instance.execute(<<-SQL, title: self.title, author_id: self.author_id, body: self.body)
+            INSERT INTO
+               questions(title, author_id, body)
+            VALUES
+               (:title, :author_id, :body)
+         SQL
+         id = QuestionsDatabase.instance.last_insert_row_id   
+      end
+   end
+
    def author
       author = QuestionsDatabase.instance.execute(<<-SQL, author_id)
          SELECT

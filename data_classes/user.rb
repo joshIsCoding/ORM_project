@@ -33,6 +33,27 @@ class User
       User.new(user.first) # query returns array of hashes
    end
 
+   def save
+      if id
+         QuestionsDatabase.instance.execute(<<-SQL, id: self.id, fname: self.fname, lname: self.lname)
+            UPDATE
+               users
+            SET
+               fname = :fname, lname = :lname
+            WHERE
+               id = :id
+         SQL
+      else
+         QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname)
+            INSERT INTO
+               users(fname, lname)
+            VALUES
+               (?, ?)
+         SQL
+         id = QuestionsDatabase.instance.last_insert_row_id   
+      end
+   end
+
    def authored_questions
       Question.find_by_author_id(id)
    end

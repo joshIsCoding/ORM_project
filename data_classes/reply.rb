@@ -47,6 +47,27 @@ class Reply
       question_replies.map {|qu_reply| Reply.new(qu_reply) } 
    end
 
+   def save
+      if id
+         QuestionsDatabase.instance.execute(<<-SQL, id: self.id, subject_question_id: self.subject_question_id, author_id: self.author_id, body: self.body, parent_id: self.parent_id)
+            UPDATE
+               replies
+            SET
+               subject_question_id = :subject_question_id, author_id = :author_id, body = :body, parent_id = :parent_id
+            WHERE
+               id = :id
+         SQL
+      else
+         QuestionsDatabase.instance.execute(<<-SQL, subject_question_id: self.subject_question_id, author_id: self.author_id, body: self.body, parent_id: self.parent_id)
+            INSERT INTO
+               replies(subject_question_id, author_id, body, parent_id)
+            VALUES
+               (:subject_question_id, :author_id, :body, :parent_id)
+         SQL
+         id = QuestionsDatabase.instance.last_insert_row_id   
+      end
+   end
+
    def author
       author = QuestionsDatabase.instance.execute(<<-SQL, author_id)
          SELECT
